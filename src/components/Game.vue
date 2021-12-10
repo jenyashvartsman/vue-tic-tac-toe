@@ -1,14 +1,15 @@
 <template>
   <div class="game">
     <div class="status">
-      <div>
-        <img src="./../assets/img/john.jpg" alt="john" />
-        User <span v-if="winner === user">(winner)</span>
+      <div class="player" :class="{ winner: winner === user }">
+        User<img src="./../assets/img/john.jpg" alt="john" />
       </div>
-      <div>
-        Skynet <span v-if="skynetThinking">...</span
-        ><span v-if="winner === skynet">(winner)</span>
-        <img src="./../assets/img/skynet.png" alt="skynet" />
+      <div class="player" :class="{ winner: winner === skynet }">
+        <img
+          :class="{ pulse: skynetThinking }"
+          src="./../assets/img/skynet.png"
+          alt="skynet"
+        />Skynet
       </div>
     </div>
 
@@ -18,6 +19,7 @@
           v-for="(square, j) in row"
           :key="square"
           class="squere"
+          :class="{ 'squere-win-state': isWinStateSquere(i, j) }"
           @click="userMove(i, j)"
         >
           {{ square }}
@@ -79,7 +81,7 @@ export default {
           this.playerMove(skynetSquare[0], skynetSquare[1], this.skynet);
 
           this.skynetThinking = false;
-        }, this.randomInt(1, 10) * 100);
+        }, this.randomInt(1, 10) * 300);
       }
     },
     playerMove(i, j, player) {
@@ -89,7 +91,7 @@ export default {
     checkWinner(player) {
       // player won
       this.winState = getWinState(this.board, player) || null;
-      if (!!this.winState) {
+      if (this.winState) {
         this.winner = player;
       }
 
@@ -98,9 +100,16 @@ export default {
         this.winner = "XO";
       }
     },
+    isWinStateSquere(i, j) {
+      return !this.winState
+        ? false
+        : this.winState.filter((squere) => squere[0] === i && squere[1] === j)
+            .length;
+    },
     // new game
     clearBoard() {
       this.winner = null;
+      this.winState = null;
       this.board = [
         [null, null, null],
         [null, null, null],
@@ -119,6 +128,8 @@ export default {
   text-align: center;
   width: fit-content;
   margin: 0 auto;
+
+  --pulse-color: rgba(0, 153, 153, 0.4);
 }
 
 .game .status {
@@ -130,9 +141,18 @@ export default {
   padding: 0 15px;
 }
 
-.game .status > div {
+.game .player {
   display: flex;
   align-items: center;
+  justify-content: space-around;
+  width: 180px;
+  padding: 10px 0;
+}
+
+.game .player.winner {
+  color: var(--white);
+  background-color: var(--primary);
+  border-radius: 8px;
 }
 
 .game .status img {
@@ -140,7 +160,12 @@ export default {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  margin: 0 5px;
+  border: 2px solid var(--white);
+}
+
+.game .status img.pulse {
+  box-shadow: 0 0 0 var(--pulse-color);
+  animation: pulse 2s infinite;
 }
 
 .game .board .row {
@@ -148,7 +173,7 @@ export default {
   justify-content: center;
 }
 
-.game .board .row .squere {
+.game .board .squere {
   width: 90px;
   height: 90px;
   line-height: 90px;
@@ -159,15 +184,39 @@ export default {
   color: var(--grey);
   border-radius: 4px;
   cursor: pointer;
+  transition: 500ms;
+}
+
+.game .board .squere:hover {
+  background-color: #eee;
+}
+
+.game .board .squere-win-state {
+  color: var(--primary);
 }
 
 .game button {
   border: none;
   background-color: var(--primary);
   color: var(--white);
-  padding: 10px 8px;
+  padding: 10px 30px;
   font-size: 18px;
   border-radius: 4px;
   cursor: pointer;
+}
+
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 var(--pulse-color);
+    box-shadow: 0 0 0 0 var(--pulse-color);
+  }
+  50% {
+    -moz-box-shadow: 0 0 0 5px var(--pulse-color);
+    box-shadow: 0 0 0 5px var(--pulse-color);
+  }
+  100% {
+    -moz-box-shadow: 0 0 0 0 var(--pulse-color);
+    box-shadow: 0 0 0 0 var(--pulse-color);
+  }
 }
 </style>
