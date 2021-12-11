@@ -1,9 +1,11 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link>
-    <router-link to="/history">History</router-link>
+  <div id="header">
+    <div id="nav">
+      <router-link to="/">Home</router-link>
+      <router-link to="/history">History</router-link>
+    </div>
+    <div id="banner">TIC TAC TOE</div>
   </div>
-  <div id="banner">TIC TAC TOE</div>
 </template>
 
 <script>
@@ -11,12 +13,12 @@ export default {};
 </script>
 
 <style>
-#nav {
+#header #nav {
   padding: 30px;
   text-align: center;
 }
 
-#nav a {
+#header #nav a {
   font-weight: bold;
   color: var(--grey);
   text-decoration: none;
@@ -27,11 +29,11 @@ export default {};
   width: 75px;
 }
 
-#nav a.router-link-exact-active {
+#header #nav a.router-link-exact-active {
   border-color: var(--primary);
 }
 
-#banner {
+#header #banner {
   text-align: center;
   color: var(--white);
   background-color: var(--primary);

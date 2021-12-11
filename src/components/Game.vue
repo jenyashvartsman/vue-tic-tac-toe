@@ -2,14 +2,14 @@
   <div class="game">
     <div class="status">
       <div class="player" :class="{ winner: winner === user }">
-        User<img src="./../assets/img/john.jpg" alt="john" />
+        User ({{ user }})<img src="./../assets/img/john.jpg" alt="john" />
       </div>
       <div class="player" :class="{ winner: winner === skynet }">
         <img
           :class="{ pulse: skynetThinking }"
           src="./../assets/img/skynet.png"
           alt="skynet"
-        />Skynet
+        />({{ skynet }}) Skynet
       </div>
     </div>
 
@@ -33,6 +33,7 @@
 
 <script>
 import { getWinState } from "./../util/winner.util";
+import { addGameHistory } from "./../db/db";
 
 export default {
   data() {
@@ -98,6 +99,10 @@ export default {
       // draw
       if (!this.winner && this.board.every((row) => !row.includes(null))) {
         this.winner = "XO";
+      }
+
+      if (!!this.winner) {
+        addGameHistory(this.winner, this.board);
       }
     },
     isWinStateSquere(i, j) {
