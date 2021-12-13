@@ -15,6 +15,6 @@ export default {
 
 <style>
 #app #container {
-  margin: 20px 30px;
+  padding: 20px 30px;
 }
 </style>

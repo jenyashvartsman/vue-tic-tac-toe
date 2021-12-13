@@ -1,23 +1,36 @@
 <template>
   <div class="game-history">
+    <!-- win state -->
     <div class="bar" v-if="gameHistory.length > 0">
-      <div class="user" :style="{ width: userWinPerc }">
+      <div class="user" :style="{ width: calcWinsPerc('X') }">
         <img src="./../assets/img/john.jpg" alt="john" />
-        {{ userWinPerc }}
+        {{ countWins("X") }}
       </div>
-      <div class="draw" :style="{ width: drawPerc }">XO {{ drawPerc }}</div>
-      <div class="skynet" :style="{ width: skynetWinPerc }">
+      <div class="draw" :style="{ width: calcWinsPerc('XO') }">
+        <img src="./../assets/img/war.jpeg" alt="war" />{{ countWins("XO") }}
+      </div>
+      <div class="skynet" :style="{ width: calcWinsPerc('O') }">
         <img src="./../assets/img/skynet.png" alt="skynet" />
-        {{ skynetWinPerc }}
+        {{ countWins("O") }}
       </div>
     </div>
 
-    <h3 v-else>No games played yet</h3>
+    <!-- no games played -->
+    <h3 v-else class="no-games">No games played yet</h3>
 
+    <!-- games history -->
     <div class="games">
       <div class="game-card" v-for="game in gameHistory" :key="game.timestamp">
-        <h5>Winner: {{ game.winner }}</h5>
-        <div>{{ formatTimestamp(game.timestamp) }}</div>
+        <h5
+          :class="{
+            'winner-x': game.winner === 'X',
+            'winner-o': game.winner === 'O',
+            'winner-xo': game.winner === 'XO',
+          }"
+        >
+          Winner: {{ game.winner }}
+        </h5>
+        <div class="game-timestamp">{{ formatTimestamp(game.timestamp) }}</div>
         <div class="game-board">
           <div v-for="row in game.board" :key="row">
             <span v-for="square in row" :key="row + square">
@@ -39,16 +52,10 @@ export default {
   data() {
     return {
       gameHistory: [],
-      userWinPerc: 0,
-      skynetWinPerc: 0,
-      drawPerc: 0,
     };
   },
   mounted() {
     this.gameHistory = getGameHistory();
-    this.userWinPerc = this.calcWinsPerc("X");
-    this.skynetWinPerc = this.calcWinsPerc("O");
-    this.drawPerc = this.calcWinsPerc("XO");
   },
   methods: {
     formatTimestamp(timestamp) {
@@ -64,10 +71,13 @@ export default {
       return new Date(timestamp).toLocaleDateString("en-US", options);
     },
     calcWinsPerc(player) {
-      const wins = this.gameHistory.filter(
-        (game) => game.winner === player
-      ).length;
-      return ((wins / this.gameHistory.length) * 100).toFixed(2) + "%";
+      return (
+        ((this.countWins(player) / this.gameHistory.length) * 100).toFixed(2) +
+        "%"
+      );
+    },
+    countWins(player) {
+      return this.gameHistory.filter((game) => game.winner === player).length;
     },
   },
 };
@@ -113,6 +123,10 @@ export default {
   background-color: var(--blue);
 }
 
+.game-history .no-games {
+  text-align: center;
+}
+
 .game-history .games {
   display: flex;
   justify-content: center;
@@ -125,14 +139,38 @@ export default {
   text-align: center;
   margin: 10px;
   padding: 0 20px;
+  max-width: 235px;
 }
 
 .game-history .games .game-card h5 {
-  color: var(--primary);
+  color: var(--white);
+  padding: 5px 10px;
+  margin: 10px auto;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.game-history .games .game-card h5.winner-x {
+  background-color: var(--primary);
+}
+
+.game-history .games .game-card h5.winner-o {
+  background-color: var(--grey);
+}
+
+.game-history .games .game-card h5.winner-xo {
+  background-color: var(--blue);
+}
+
+.game-history .games .game-card .game-timestamp {
+  letter-spacing: 1px;
 }
 
 .game-history .games .game-card .game-board {
-  margin: 15px 0;
+  margin: 15px auto;
+  border: 1px solid var(--grey);
+  border-radius: 4px;
+  width: fit-content;
 }
 
 .game-history .games .game-card .game-board > div > span {
@@ -142,5 +180,7 @@ export default {
   display: inline-block;
   border: 1px solid var(--grey);
   text-align: center;
+  font-size: 12px;
+  font-weight: bold;
 }
 </style>

@@ -1,10 +1,11 @@
 <template>
   <div class="game">
+    <!-- players -->
     <div class="status">
-      <div class="player" :class="{ winner: winner === user }">
+      <div class="player" :class="{ 'winner winner-x': winner === user }">
         User ({{ user }})<img src="./../assets/img/john.jpg" alt="john" />
       </div>
-      <div class="player" :class="{ winner: winner === skynet }">
+      <div class="player" :class="{ 'winner winner-o': winner === skynet }">
         <img
           :class="{ pulse: skynetThinking }"
           src="./../assets/img/skynet.png"
@@ -13,6 +14,7 @@
       </div>
     </div>
 
+    <!-- game -->
     <div class="board">
       <div v-for="(row, i) in board" :key="row" class="row">
         <div
@@ -27,6 +29,7 @@
       </div>
     </div>
 
+    <!-- reset -->
     <button v-if="winner" @click="clearBoard()">Reset Game</button>
   </div>
 </template>
@@ -152,12 +155,20 @@ export default {
   justify-content: space-around;
   width: 180px;
   padding: 10px 0;
+  font-weight: bold;
 }
 
 .game .player.winner {
   color: var(--white);
-  background-color: var(--primary);
   border-radius: 8px;
+}
+
+.game .player.winner-x {
+  background-color: var(--primary);
+}
+
+.game .player.winner-o {
+  background-color: var(--grey);
 }
 
 .game .status img {
@@ -179,9 +190,9 @@ export default {
 }
 
 .game .board .squere {
-  width: 90px;
-  height: 90px;
-  line-height: 90px;
+  width: 120px;
+  height: 120px;
+  line-height: 120px;
   text-align: center;
   font-size: 75px;
   border: 2px solid var(--grey);

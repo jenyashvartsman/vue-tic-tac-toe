@@ -1,7 +1,7 @@
 <template>
   <div id="header">
     <div id="nav">
-      <router-link to="/">Home</router-link>
+      <router-link to="/">Game</router-link>
       <router-link to="/history">History</router-link>
     </div>
     <div id="banner">TIC TAC TOE</div>
@@ -38,7 +38,7 @@ export default {};
   color: var(--white);
   background-color: var(--primary);
   padding: 25px 0;
-  font-weight: 500;
+  font-weight: bold;
   font-size: 26px;
 }
 </style>
