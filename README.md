@@ -17,3 +17,8 @@ npm run build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Demo
+```
+[Demo](https://jenyashvartsman.github.io/vue-tic-tac-toe/) 
+```
